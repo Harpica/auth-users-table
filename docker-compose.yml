@@ -11,13 +11,22 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_TCP_PORT: ${DATABASE_PORT}
     ports:
-      - '5432:5432'
-
+      - '${DATABASE_PORT}:${DATABASE_PORT}'
+    expose:
+      - '${DATABASE_PORT}'
+    volumes:
+      - my-db:/var/lib/mysql
   # adminer:
   #   image: adminer
   #   restart: always
   #   ports:
   #     - 8080:8080
+
+volumes:
+  my-db:
