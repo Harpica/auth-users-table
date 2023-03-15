@@ -1,5 +1,5 @@
-import { Api } from '../utils/Api';
 import { NavigateFunction } from 'react-router-dom';
+import { Api } from '../utils/Api';
 import { UserData } from '../utils/types';
 
 export class AuthVM {

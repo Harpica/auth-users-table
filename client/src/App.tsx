@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import { DEFAULT_USER } from './utils/constants';
 import { UserData } from './utils/types';
-import AuthView from './views/Login';
+import AuthView from './views/AuthView';
 import MainView from './views/MainView';
 
 function App() {
   const [isAuth, setIsAuth] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<UserData>({
-    id: 0,
-    name: 'default',
-    email: 'default@email.com',
-    createdAt: Date.now().toString(),
-    lastVisit: Date.now().toString(),
-    status: 'active',
-  });
+  const [currentUser, setCurrentUser] = useState<UserData>(DEFAULT_USER);
 
   return (
     <BrowserRouter>

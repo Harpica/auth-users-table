@@ -36,7 +36,6 @@ export class MainVM {
             lastVisit: new Date(user.lastVisit).toLocaleString(),
           };
         });
-        console.log(newUsers);
         this.setUsers(newUsers);
       })
       .catch((err) => console.log(err));

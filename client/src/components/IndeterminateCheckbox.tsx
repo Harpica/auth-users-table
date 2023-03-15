@@ -1,4 +1,4 @@
-import React, { HTMLProps, useRef } from 'react';
+import { HTMLProps, useEffect, useRef } from 'react';
 
 export function IndeterminateCheckbox({
   indeterminate,
@@ -7,7 +7,7 @@ export function IndeterminateCheckbox({
 }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
   const ref = useRef<HTMLInputElement>(null!);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate;
     }

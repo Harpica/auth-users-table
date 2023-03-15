@@ -1,5 +1,5 @@
-import { AuthVM } from '../viewModels/Auth.VM';
 import { Link } from 'react-router-dom';
+import { AuthVM } from '../viewModels/Auth.VM';
 
 interface AuthFormProps {
   type: 'Login' | 'Register';

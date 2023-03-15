@@ -1,7 +1,7 @@
+import { useNavigate } from 'react-router-dom';
+import { AuthVM } from '../viewModels/Auth.VM';
 import AuthForm from '../components/AuthForm';
 import { api } from '../utils/Api';
-import { AuthVM } from '../viewModels/Auth.VM';
-import { useNavigate } from 'react-router-dom';
 import { UserData } from '../utils/types';
 
 interface AuthViewProps {
