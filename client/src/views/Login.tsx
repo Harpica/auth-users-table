@@ -1,56 +1,29 @@
-const Login = () => {
+import AuthForm from '../components/AuthForm';
+import { api } from '../utils/Api';
+import { AuthVM } from '../viewModels/Auth.VM';
+import { useNavigate } from 'react-router-dom';
+import { UserData } from '../utils/types';
+
+interface AuthViewProps {
+  type: 'Login' | 'Register';
+  setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<UserData>>;
+}
+
+const AuthView: React.FC<AuthViewProps> = ({
+  type,
+  setIsAuth,
+  setCurrentUser,
+}) => {
+  const navigate = useNavigate();
+  const vm = new AuthVM(setIsAuth, setCurrentUser, api, navigate);
   return (
     <section className='App h-screen w-full flex justify-center items-center bg-gradient-to-r from-sky-500 to-indigo-500'>
       <div className='w-full max-w-md bg-gray-800'>
-        <form
-          action=''
-          className=' bg-white shadow-md rounded px-8 py-8 pt-8 flex flex-col gap-4'
-        >
-          <div className=''>
-            <label
-              htmlFor='email'
-              className='text-sm block font-bold  pb-2 uppercase'
-            >
-              email address
-            </label>
-            <input
-              type='email'
-              name='email'
-              id=''
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 '
-              placeholder='Johnbull@example.com'
-            />
-          </div>
-          <div className=''>
-            <label
-              htmlFor='password'
-              className='text-sm block font-bold pb-2 uppercase'
-            >
-              password
-            </label>
-            <input
-              type='password'
-              name='email'
-              id=''
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300'
-              placeholder='Enter your password'
-            />
-          </div>
-          <div className='pt-7 flex flex-col gap-3'>
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
-              type='button'
-            >
-              Sign In
-            </button>
-            <a href='#' className='self-center underline hover:opacity-60'>
-              Register
-            </a>
-          </div>
-        </form>
+        <AuthForm type={type} vm={vm} />
       </div>
     </section>
   );
 };
 
-export default Login;
+export default AuthView;
