@@ -9,11 +9,13 @@ interface JwtPayload {
 }
 
 export const auth = (req: Request, _res: Response, next: NextFunction) => {
-  const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  // const { authorization } = req.headers;
+  const token = req.cookies.jwt;
+  // if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!token) {
     next(new UnauthorizedError());
   } else {
-    const token = authorization.replace('Bearer ', '');
+    // const token = authorization.replace('Bearer ', '');
     let payload: string | jwt.JwtPayload;
     try {
       payload = jwt.verify(token, process.env.JWT_KEY || '') as JwtPayload;
