@@ -28,10 +28,13 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
       })
       .then((user) => {
         const token = jwt.sign({ id: user.id }, process.env.JWT_KEY || '');
+        res.cookie('jwt', token, {
+          maxAge: 3600000,
+          httpOnly: true,
+        });
         res.send({
           data: {
             user: user,
-            token: token,
           },
         });
       })
@@ -134,11 +137,12 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
           next(new ForbiddenError('User is blocked'));
         }
         const token = jwt.sign({ id: user.id }, process.env.JWT_KEY || '');
-        res.send({
-          data: {
-            token: token,
-          },
-        });
+        res
+          .cookie('jwt', token, {
+            maxAge: 3600000,
+            httpOnly: true,
+          })
+          .end();
       }
     })
     .catch((_err) => {
