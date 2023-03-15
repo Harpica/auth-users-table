@@ -14,12 +14,13 @@ import ForbiddenError from '../utils/errors/ForbiddenError';
 export const getUsers = (_req: Request, res: Response, next: NextFunction) => {
   prisma.user
     .findMany()
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.send({ users }))
     .catch(next);
 };
 
 export const createUser = (req: Request, res: Response, next: NextFunction) => {
-  const userData = req.body;
+  const userData = req.body.data;
+  console.log(userData);
   bcryptjs.hash(userData.password, 10).then((hash) => {
     userData.password = hash;
     prisma.user
@@ -28,15 +29,15 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
       })
       .then((user) => {
         const token = jwt.sign({ id: user.id }, process.env.JWT_KEY || '');
-        res.cookie('jwt', token, {
-          maxAge: 3600000,
-          httpOnly: true,
-        });
-        res.send({
-          data: {
+        res
+          .cookie('jwt', token, {
+            maxAge: 3600000,
+            httpOnly: true,
+          })
+          .send({
             user: user,
-          },
-        });
+          });
+        console.log(res.cookie);
       })
       .catch((err) => {
         if (
@@ -58,7 +59,7 @@ export const updateUsersStatus = (
   res: Response,
   next: NextFunction
 ) => {
-  const { ids, status } = req.body;
+  const { ids, status } = req.body.data;
   if (ids === undefined || status === undefined) {
     throw new BadRequestError('Given data for user status update is incorrect');
   }
@@ -88,6 +89,7 @@ export const deleteUsers = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(req.body);
   const { ids } = req.body;
   prisma.user
     .deleteMany({
@@ -108,7 +110,8 @@ export const deleteUsers = (
 };
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body.data;
+  console.log(req.body.data);
 
   prisma.user
     .findUnique({
@@ -142,10 +145,13 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
             maxAge: 3600000,
             httpOnly: true,
           })
-          .end();
+          .send({
+            user: user,
+          });
       }
     })
-    .catch((_err) => {
+    .catch((err) => {
+      console.log(err);
       next(new UnauthorizedError());
     });
 };

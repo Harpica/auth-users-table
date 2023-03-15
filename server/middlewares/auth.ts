@@ -19,7 +19,6 @@ export const auth = (req: Request, _res: Response, next: NextFunction) => {
     let payload: string | jwt.JwtPayload;
     try {
       payload = jwt.verify(token, process.env.JWT_KEY || '') as JwtPayload;
-      console.log(payload);
       prisma.user
         .findUnique({
           where: {
