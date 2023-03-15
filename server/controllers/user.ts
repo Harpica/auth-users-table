@@ -111,7 +111,6 @@ export const deleteUsers = (
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body.data;
-  console.log(req.body.data);
 
   prisma.user
     .findUnique({
@@ -121,7 +120,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     })
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Wrong email or password'));
+        return Promise.reject(new UnauthorizedError('Wrong email or password'));
       } else {
         if (user.password)
           return {
@@ -134,24 +133,37 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
       if (data) {
         const { matched, user } = data;
         if (!matched) {
-          return Promise.reject(new Error('Wrong email or password'));
+          throw new UnauthorizedError('Wrong email or password');
         }
         if (user.status === 'blocked') {
-          next(new ForbiddenError('User is blocked'));
+          throw new ForbiddenError('User is blocked');
         }
-        const token = jwt.sign({ id: user.id }, process.env.JWT_KEY || '');
-        res
-          .cookie('jwt', token, {
-            maxAge: 3600000,
-            httpOnly: true,
-          })
-          .send({
-            user: user,
-          });
+        return user.id;
       }
     })
+    .then((id) => {
+      prisma.user
+        .update({
+          where: {
+            id: id,
+          },
+          data: {
+            lastVisit: new Date(Date.now()),
+          },
+        })
+        .then((user) => {
+          const token = jwt.sign({ id: id }, process.env.JWT_KEY || '');
+          res
+            .cookie('jwt', token, {
+              maxAge: 3600000,
+              httpOnly: true,
+            })
+            .send({
+              user: user,
+            });
+        });
+    })
     .catch((err) => {
-      console.log(err);
-      next(new UnauthorizedError());
+      next(err);
     });
 };
