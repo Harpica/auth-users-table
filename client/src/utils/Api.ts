@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { Status } from './types';
-import dotenv from 'dotenv';
 
-dotenv.config();
 const BASE_URL = process.env.BASE_URL || 'localhost';
 
 axios.defaults.withCredentials = true;
