@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../bd/prisma';
+import { User } from '../controllers/user';
 import ForbiddenError from '../utils/errors/ForbiddenError';
 import UnauthorizedError from '../utils/errors/UnautorizedError';
 
@@ -25,7 +26,7 @@ export const auth = (req: Request, _res: Response, next: NextFunction) => {
             id: payload.id,
           },
         })
-        .then((user) => {
+        .then((user: User | null) => {
           if (user?.status === 'blocked') {
             next(new ForbiddenError('User is blocked'));
           }

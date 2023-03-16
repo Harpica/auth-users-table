@@ -11,10 +11,24 @@ import DocumentNotFoundError from '../utils/errors/DocumentNotFoundError';
 import UnauthorizedError from '../utils/errors/UnautorizedError';
 import ForbiddenError from '../utils/errors/ForbiddenError';
 
+export type User = {
+  id: number;
+  createdAt: Date;
+  email: string;
+  password: string | null;
+  name: string | null;
+  status: string;
+  lastVisit: Date;
+};
+
+type BatchPayload = {
+  count: number;
+};
+
 export const getUsers = (_req: Request, res: Response, next: NextFunction) => {
   prisma.user
     .findMany()
-    .then((users) => res.send({ users }))
+    .then((users: Array<User>) => res.send({ users }))
     .catch(next);
 };
 
@@ -27,7 +41,7 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
       .create({
         data: userData,
       })
-      .then((user) => {
+      .then((user: User) => {
         const token = jwt.sign({ id: user.id }, process.env.JWT_KEY || '');
         res
           .cookie('jwt', token, {
@@ -39,7 +53,7 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
           });
         console.log(res.cookie);
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         if (
           err instanceof PrismaClientValidationError ||
           err instanceof PrismaClientKnownRequestError
@@ -72,7 +86,7 @@ export const updateUsersStatus = (
         status: status,
       },
     })
-    .then((data) => {
+    .then((data: BatchPayload) => {
       if (data.count !== 0) {
         res.send('updated');
       } else {
@@ -97,7 +111,7 @@ export const deleteUsers = (
         id: { in: ids },
       },
     })
-    .then((data) => {
+    .then((data: BatchPayload) => {
       if (data.count !== 0) {
         res.send('updated');
       } else {
@@ -118,7 +132,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         email: email,
       },
     })
-    .then((user) => {
+    .then((user: User | null) => {
       if (!user) {
         return Promise.reject(new UnauthorizedError('Wrong email or password'));
       } else {
@@ -129,7 +143,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
           };
       }
     })
-    .then((data) => {
+    .then((data: { matched: Promise<boolean>; user: User } | undefined) => {
       if (data) {
         const { matched, user } = data;
         if (!matched) {
@@ -141,7 +155,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         return user.id;
       }
     })
-    .then((id) => {
+    .then((id: number | undefined) => {
       prisma.user
         .update({
           where: {
@@ -151,7 +165,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
             lastVisit: new Date(Date.now()),
           },
         })
-        .then((user) => {
+        .then((user: User) => {
           const token = jwt.sign({ id: id }, process.env.JWT_KEY || '');
           res
             .cookie('jwt', token, {
@@ -163,7 +177,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
             });
         });
     })
-    .catch((err) => {
+    .catch((err: Error) => {
       next(err);
     });
 };
