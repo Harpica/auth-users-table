@@ -38,6 +38,7 @@ services:
       - DATABASE_URL=$DATABASE_URL
       - JWT_KEY=$JWT_KEY
       - PORT=$PORT
+      - BASE_URL=$BASE_URL
     networks:
       - backend
       - frontend
@@ -47,9 +48,6 @@ services:
       - node
     build:
       context: ./client
-
-    environment:
-      - BASE_URL=62.113.108.183
     ports:
       - 3000:80
     networks:

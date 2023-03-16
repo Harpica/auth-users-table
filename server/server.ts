@@ -11,8 +11,10 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.APP_PORT || 5000;
+const BASE_URL = process.env.BASE_URL || 'localhost';
+
 const corsOptions = {
-  origin: '*',
+  origin: `http://${BASE_URL}:3000`,
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
