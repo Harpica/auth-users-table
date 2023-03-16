@@ -37,7 +37,6 @@ services:
     environment:
       - DATABASE_URL=$DATABASE_URL
       - JWT_KEY=$JWT_KEY
-      - HOST=$HOST
       - PORT=$PORT
     networks:
       - backend
@@ -48,6 +47,9 @@ services:
       - node
     build:
       context: ./client
+    env_file: .env
+    environment:
+      - BASE_URL=$BASE_URL
     ports:
       - 3000:80
     networks:

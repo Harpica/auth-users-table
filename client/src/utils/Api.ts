@@ -1,5 +1,9 @@
 import axios from 'axios';
 import { Status } from './types';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const BASE_URL = process.env.BASE_URL || 'localhost';
 
 axios.defaults.withCredentials = true;
 
@@ -7,11 +11,11 @@ export class Api {
   constructor() {}
 
   getUsers() {
-    return axios.get('http://localhost:5000/users/');
+    return axios.get(`http://${BASE_URL}:5000/users/`);
   }
 
   loginUser(email: string, password: string) {
-    return axios.post('http://localhost:5000/users/login', {
+    return axios.post(`http://${BASE_URL}:5000/users/login`, {
       data: {
         email: email,
         password: password,
@@ -20,7 +24,7 @@ export class Api {
   }
 
   createUser(name: string, email: string, password: string) {
-    return axios.post('http://localhost:5000/users', {
+    return axios.post(`http://${BASE_URL}:5000/users`, {
       data: {
         name: name,
         email: email,
@@ -30,7 +34,7 @@ export class Api {
   }
 
   deleteUsers(ids: Array<number>) {
-    return axios.delete('http://localhost:5000/users', {
+    return axios.delete(`http://${BASE_URL}:5000/users`, {
       data: {
         ids: ids,
       },
@@ -38,7 +42,7 @@ export class Api {
   }
 
   changeUsersStatus(ids: Array<number>, status: Status) {
-    return axios.patch('http://localhost:5000/users/status', {
+    return axios.patch(`http://${BASE_URL}:5000/users/status`, {
       data: {
         ids: ids,
         status: status,
