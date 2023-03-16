@@ -60,7 +60,10 @@ export class MainVM {
           );
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.setIsAuth(false);
+      });
   }
 
   deleteUsers() {
@@ -74,7 +77,10 @@ export class MainVM {
           this.setUsers(this.users.filter((user) => !ids.includes(user.id)));
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.setIsAuth(false);
+      });
   }
 
   logOut() {
