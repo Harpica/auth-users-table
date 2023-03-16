@@ -27,9 +27,8 @@ export const auth = (req: Request, _res: Response, next: NextFunction) => {
         if (user?.status === 'blocked') {
           throw new ForbiddenError('User is blocked');
         }
+        next();
       })
       .catch(next);
-
-    next();
   }
 };
