@@ -1,7 +1,8 @@
 import axios from 'axios';
+
 import { Status } from './types';
 
-const BASE_URL = process.env.BASE_URL || 'localhost';
+export const BASE_URL = process.env.REACT_APP_BASE_URL || 'localhost';
 
 axios.defaults.withCredentials = true;
 
@@ -13,6 +14,7 @@ export class Api {
   }
 
   loginUser(email: string, password: string) {
+    console.log(BASE_URL);
     return axios.post(`http://${BASE_URL}:5000/users/login`, {
       data: {
         email: email,

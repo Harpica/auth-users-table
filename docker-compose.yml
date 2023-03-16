@@ -47,9 +47,9 @@ services:
       - node
     build:
       context: ./client
-    env_file: .env
+
     environment:
-      - BASE_URL=$BASE_URL
+      - BASE_URL=62.113.108.183
     ports:
       - 3000:80
     networks:
