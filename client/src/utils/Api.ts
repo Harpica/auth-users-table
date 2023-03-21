@@ -14,7 +14,6 @@ export class Api {
   }
 
   loginUser(email: string, password: string) {
-    console.log(BASE_URL);
     return axios.post(`http://${BASE_URL}:5000/users/login`, {
       data: {
         email: email,
